@@ -11,6 +11,8 @@ const poolY = 200;
 const poolSize = 100;
 
 let gameRunning = true;
+let battleMode = false;
+let bearHP = 100;
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -26,6 +28,12 @@ function draw() {
   // Draw character
   ctx.fillStyle = 'red';
   ctx.fillRect(characterX, characterY, characterSize, characterSize);
+
+  if (battleMode) {
+    ctx.fillStyle = 'black';
+    ctx.font = '20px Arial';
+    ctx.fillText(`Bear HP: ${bearHP}`, 10, 30);
+  }
 }
 
 function update() {
@@ -41,6 +49,21 @@ function update() {
     alert('Game Over! You fell in the pool.');
     return;
   }
+
+  if (!battleMode && Math.random() < 0.01) {
+    battleMode = true;
+    alert('You encountered a bear! Prepare for battle.');
+  }
+
+  if (battleMode) {
+    // Implement battle logic here
+  } else {
+    // Random walk
+    const dx = Math.floor(Math.random() * 3) - 1;
+    const dy = Math.floor(Math.random() * 3) - 1;
+    characterX += dx * 5;
+    characterY += dy * 5;
+  }
 }
 
 function gameLoop() {
@@ -49,24 +72,19 @@ function gameLoop() {
   if (gameRunning) requestAnimationFrame(gameLoop);
 }
 
-window.addEventListener('keydown', (event) => {
-  if (!gameRunning) return;
 
-  switch (event.key) {
-    case 'ArrowUp':
-      characterY -= 10;
-      break;
-    case 'ArrowDown':
-      characterY += 10;
-      break;
-    case 'ArrowLeft':
-      characterX -= 10;
-      break;
-    case 'ArrowRight':
-      characterX += 10;
-      break;
+window.addEventListener('keydown', (event) => {
+  if (battleMode) {
+    if (event.key === 'a') {
+      bearHP -= 10;
+      if (bearHP <= 0) {
+        battleMode = false;
+        alert('You defeated the bear!');
+      }
+    }
   }
 });
+
 
 gameLoop();
 
