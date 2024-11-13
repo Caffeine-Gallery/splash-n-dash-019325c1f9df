@@ -57,12 +57,6 @@ function update() {
 
   if (battleMode) {
     // Implement battle logic here
-  } else {
-    // Random walk
-    const dx = Math.floor(Math.random() * 3) - 1;
-    const dy = Math.floor(Math.random() * 3) - 1;
-    characterX += dx * 5;
-    characterY += dy * 5;
   }
 }
 
@@ -72,8 +66,9 @@ function gameLoop() {
   if (gameRunning) requestAnimationFrame(gameLoop);
 }
 
-
 window.addEventListener('keydown', (event) => {
+  if (!gameRunning) return;
+
   if (battleMode) {
     if (event.key === 'a') {
       bearHP -= 10;
@@ -82,9 +77,24 @@ window.addEventListener('keydown', (event) => {
         alert('You defeated the bear!');
       }
     }
+    return; // Prevent movement during battle
+  }
+
+  switch (event.key) {
+    case 'ArrowUp':
+      characterY -= 10;
+      break;
+    case 'ArrowDown':
+      characterY += 10;
+      break;
+    case 'ArrowLeft':
+      characterX -= 10;
+      break;
+    case 'ArrowRight':
+      characterX += 10;
+      break;
   }
 });
-
 
 gameLoop();
 
