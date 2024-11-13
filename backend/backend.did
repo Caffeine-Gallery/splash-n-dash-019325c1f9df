@@ -1,0 +1,9 @@
+type Score = 
+ record {
+   name: text;
+   score: nat;
+ };
+service : {
+  getHighScores: () -> (vec Score) query;
+  submitScore: (text, nat) -> ();
+}
